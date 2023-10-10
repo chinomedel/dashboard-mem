@@ -15,6 +15,8 @@ Route::get('/', function () {
 */
 //Hace lo mismo que el código anterior, pero mas corto, además agrega el name para darle un nombre a la ruta
 Route::view('/', 'welcome')->name("welcome");
+Route::view('/home', 'landing.home')->name("home");
+Route::view('/contacto', 'landing.contacto')->name("contacto");
 
 Route::get('/dashboard', function () {
     return view('dashboard');
