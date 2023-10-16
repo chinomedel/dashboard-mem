@@ -8,18 +8,40 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div style="color:green; font-size:32px;" class="p-6 text-gray-900 dark:text-gray-100">
+                    {{ __("Desert Bloom!") }}
+                    
+                </div>
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in Nelson!") }}
-                    <div>
-                        <span>ph: </span><h3 id="ph"></h3>
-                        <span>ecMezcla: </span> <h3 id="ec"></h3>
-                        <span>tempMezcla: </span><h3 id="temp"></h3>
+                    <div class="row">
+                        <div class="col-8"><span>Ph mezcla: </span></div>
+                        <div class="col-4"><h3 id="ph"></h3></div>
                     </div>
+                    <div class="row">
+                        <div class="col-8"><p>Ec mezcla: </p> </div>
+                        <div class="col-4"><h3 id="ec"></h3></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8"><p>Temperatura mezcla:</p> </div>
+                        <div class="col-4"><h3 id="temp"></h3></div>
+                    </div>
+                
+                   <br>
+                    <span>Estado de retorno: </span><h3 id="estado-retorno"></h3><br>
+                   
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="luz" value="" class="sr-only peer" onchange="switch2()">
+                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Luz</span>
+                    </label>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+  
     <script  type="text/javascript">
     
         //Conect options
@@ -35,10 +57,16 @@
         }
         const url = 'ws://iotmem.cl:8083/mqtt';
         const client  = mqtt.connect(url, options)
-        const mqttTopics = ['test/ph', 'test/ec', 'test/temp'];
-        var ultimoMensajePh = localStorage.getItem('ultimoMensajePh') || '';
-        var ultimoMensajeEc = localStorage.getItem('ultimoMensajeEc') || '';
-        var ultimoMensajeTemp = localStorage.getItem('ultimoMensajeTemp') || '';
+        const mqttTopics = 
+        [
+            'memcontrol/desertbloom/001/cultivoHidroponico/phMezcla', 
+            'memcontrol/desertbloom/001/cultivoHidroponico/ecMezcla', 
+            'memcontrol/desertbloom/001/cultivoHidroponico/tempMezcla',
+            'memcontrol/desertbloom/001/cultivoHidroponico/estadoRetorno'
+        ];
+        //var ultimoMensajePh = localStorage.getItem('ultimoMensajePh') || '';
+        //var ultimoMensajeEc = localStorage.getItem('ultimoMensajeEc') || '';
+        //var ultimoMensajeTemp = localStorage.getItem('ultimoMensajeTemp') || '';
 
         client.on('connect',()=>{
             console.log("Cliente MQTT conectado con éxito!!!")
@@ -57,42 +85,60 @@
                 })
             });
         })
+       
         // Receive messages
         client.on('message', function (topic, message) {
             const mensaje = message
 
             switch(topic){
-                case "test/ph":
+                case "memcontrol/desertbloom/001/cultivoHidroponico/phMezcla":
                     console.log("Mensaje recibido desde tópico= ",topic," y el mensaj es: ", message.toString())
                     var ph = document.getElementById("ph")
                     ph.innerHTML = message.toString()
                     mensajePh = message.toString()
                     // Almacena el último mensaje en localStorage
-                    localStorage.setItem('ultimoMensajePh', mensajePh);
+                    //localStorage.setItem('ultimoMensajePh', mensajePh);
                     break;
-                case "test/ec":
+                case "memcontrol/desertbloom/001/cultivoHidroponico/ecMezcla":
                     console.log("Mensaje recibido desde tópico= ",topic," y el mensaj es: ", message.toString())
                     var ec = document.getElementById("ec")
                     ec.innerHTML = message.toString()
                     mensajeEc = message.toString()
                     // Almacena el último mensaje en localStorage
-                    localStorage.setItem('ultimoMensajeEc', mensajeEc);
+                    //localStorage.setItem('ultimoMensajeEc', mensajeEc);
                     break;
-                case "test/temp":
+                case "memcontrol/desertbloom/001/cultivoHidroponico/tempMezcla":
                     console.log("Mensaje recibido desde tópico= ",topic," y el mensaj es: ", message.toString())
                     var temp = document.getElementById("temp")
                     temp.innerHTML = message.toString()
                     mensajeTemp = message.toString()
                     // Almacena el último mensaje en localStorage
-                    localStorage.setItem('ultimoMensajeTemp', mensajeTemp);
+                    //localStorage.setItem('ultimoMensajeTemp', mensajeTemp);
                     break;
-                    default:
+                case "memcontrol/desertbloom/001/cultivoHidroponico/estadoRetorno":
+                    console.log("Mensaje recibido desde tópico= ",topic," y el mensaj es: ", message.toString())
+                    var retorno = document.getElementById("estado-retorno")
+                    retorno.innerHTML = message.toString()
+                    mensajeRetorno = message.toString()
+                    
+                break;
+                case "memcontrol/desertbloom/001/cultivoHidroponico/interruptorIot":
+                    console.log("Mensaje recibido desde tópico= ",topic," y el mensaj es: ", message.toString())
+                    var s = document.getElementById("luz")
+                    mensajeLuz = message.toString()
+                    if(mensajeLuz == "on"){
+                        s.checked = true;
+                    }else{
+                        s.checked = false;
+                    }
+                    break;
+                default:
                         // Tópico desconocido
                         console.log('Mensaje en tópico desconocido:', topic, mensaje);
 
             } 
         })
-
+        /*
         function obtenerPh(){
             return ultimoMensajePh
         }
@@ -103,7 +149,6 @@
             return ultimoMensajeTemp
         }
 
-        // Ejemplo de cómo obtener el último mensaje
         setInterval(function () {
             const mensaje = obtenerPh();
             console.log('Último mensaje:', mensaje);
@@ -111,20 +156,22 @@
             localStorage.setItem('ultimoMensajePh', mensaje);
             
         }, 5000);
-        
+        */
         // Manejador de eventos en caso de error
         client.on('error', function (error) {
         console.error('Error de MQTT:', error);
         });
         
         function switch2(){
-            if($('#switch2').is(":checked")){
+            var s = document.getElementById("luz")
+            if(s.checked){
                 console.log("encendido");
-                client.publish('memcontrol/casaChelo/pieza/switch2', 'on')
+                client.publish("memcontrol/desertbloom/001/cultivoHidroponico/interruptorIot","on")
             }else{
                 console.log("apagado");
-                client.publish('memcontrol/casaChelo/pieza/switch2', 'off')
+                client.publish("memcontrol/desertbloom/001/cultivoHidroponico/interruptorIot","off")
             }
+          
         }
     
     </script>
