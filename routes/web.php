@@ -21,6 +21,10 @@ Route::view('/contacto', 'landing.contacto')->name("contacto");
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/test', function () {
+    return view('profile.
+    test');
+})->middleware(['auth', 'verified'])->name('test');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

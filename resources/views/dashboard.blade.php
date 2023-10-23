@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight titulo">
-            {{ __('Dashboard Mem') }}
+            {{ __('Desert Bloom!') }}
         </h2>
     </x-slot>
 
@@ -12,22 +12,23 @@
                     {{ __("Desert Bloom!") }}
                     
                 </div>
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <div class="row">
-                        <div class="col-8"><span>Ph mezcla: </span></div>
-                        <div class="col-4"><h3 id="ph"></h3></div>
+                <div class="p-6 text-gray-900 dark:text-gray-100 ">
+                    <div class="flex justify-between h-8">
+                        <div><h4>Ph mezcla: </h4></div>
+                        <div class="col-4"><p id="ph"></p></div>
                     </div>
-                    <div class="row">
-                        <div class="col-8"><p>Ec mezcla: </p> </div>
-                        <div class="col-4"><h3 id="ec"></h3></div>
+                    <div class="flex justify-between h-8">
+                        <div><h4>Ec mezcla: </h4> </div>
+                        <div><p id="ec"></p></div>
                     </div>
-                    <div class="row">
-                        <div class="col-8"><p>Temperatura mezcla:</p> </div>
-                        <div class="col-4"><h3 id="temp"></h3></div>
+                    <div class="flex justify-between h-8">
+                        <div><h4>Temperatura mezcla:</h4> </div>
+                        <div><p id="temp"></p></div>
                     </div>
-                
-                   <br>
-                    <span>Estado de retorno: </span><h3 id="estado-retorno"></h3><br>
+
+                   <div class="flex justify-between h-8">
+                        <h4>Estado de retorno: </h4><p id="estado-retorno"></p><br>
+                   </div>
                    
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="luz" value="" class="sr-only peer" onchange="switch2()">
@@ -62,7 +63,8 @@
             'memcontrol/desertbloom/001/cultivoHidroponico/phMezcla', 
             'memcontrol/desertbloom/001/cultivoHidroponico/ecMezcla', 
             'memcontrol/desertbloom/001/cultivoHidroponico/tempMezcla',
-            'memcontrol/desertbloom/001/cultivoHidroponico/estadoRetorno'
+            'memcontrol/desertbloom/001/cultivoHidroponico/estadoRetorno',
+            'memcontrol/desertbloom/001/cultivoHidroponico/interruptorIot'
         ];
         //var ultimoMensajePh = localStorage.getItem('ultimoMensajePh') || '';
         //var ultimoMensajeEc = localStorage.getItem('ultimoMensajeEc') || '';
